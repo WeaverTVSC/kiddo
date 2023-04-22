@@ -170,23 +170,9 @@ where
             .get_unchecked(pivot_idx.az::<usize>())
             .get_unchecked(split_dim);
 
-        let mut left = LeafNode::new();
         let mut right = LeafNode::new();
 
         if B.rem(2) == 1 {
-            left.content_points
-                .get_unchecked_mut(..(pivot_idx.az::<usize>()))
-                .copy_from_slice(
-                    orig.content_points
-                        .get_unchecked(..(pivot_idx.az::<usize>())),
-                );
-            left.content_items
-                .get_unchecked_mut(..(pivot_idx.az::<usize>()))
-                .copy_from_slice(
-                    orig.content_items
-                        .get_unchecked(..(pivot_idx.az::<usize>())),
-                );
-            left.size = pivot_idx;
 
             right
                 .content_points
@@ -205,19 +191,6 @@ where
 
             right.size = (B.az::<IDX>()) - pivot_idx;
         } else {
-            left.content_points
-                .get_unchecked_mut(..(pivot_idx.az::<usize>()))
-                .copy_from_slice(
-                    orig.content_points
-                        .get_unchecked(..(pivot_idx.az::<usize>())),
-                );
-            left.content_items
-                .get_unchecked_mut(..(pivot_idx.az::<usize>()))
-                .copy_from_slice(
-                    orig.content_items
-                        .get_unchecked(..(pivot_idx.az::<usize>())),
-                );
-            left.size = pivot_idx;
 
             right
                 .content_points
@@ -237,7 +210,7 @@ where
             right.size = (B.az::<IDX>()) - pivot_idx;
         }
 
-        *orig = left;
+        orig.size = pivot_idx;
         self.leaves.push(right);
 
         self.stems.push(StemNode {
